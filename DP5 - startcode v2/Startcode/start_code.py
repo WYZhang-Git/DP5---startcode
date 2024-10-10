@@ -50,52 +50,95 @@ json_bestand.close() # sluit het bestand indien niet meer nodig
 # Zorg dat het persoonlijke programma genereert/output naar een .json bestand, dat weer ingelezen kan worden in een webomgeving (zie acceptatieomgeving website folder)
 # Hieronder een begin...
 
-# Initialiseer een lege lijst die de geselecteerde attracties zal bevatten
+# Initialiseer een lege lijst die de dagplanning zal bevatten
 
-attractie_lijst = []
+dagplanning = []
 
- 
+# Variabelen om de totale tijd van de dagplanning bij te houden
+totale_tijd = 0
+verblijfsduur = json_dict['verblijfsduur'] # Verblijfsduur van de bezoeker (in minunten)
 
-# Doorloop de lijst van voorzieningen (attracties) en voeg attracties toe die aan de voorkeuren van de klant voldoen
+# Functie om te checken of een bezoeker aan de eisden voldoet van een voorziening
+def toegankelijkheid_voorziening(voorziening, bezoeker):
+    return (
+        (voorziening['attractie_min_leeftijd'] is None or bezoeker['leeftijd'] >= voorziening['attractie_min_leeftijd']) and
+        (voorziening['attractie_min_lengte'] is None or bezoeker['lengte'] >= voorziening['attractie_min_lengte']) and
+        (voorziening['attractie_max_lengte'] is None or bezoeker['lengte'] <= voorziening['attractie_max_lengte']) and  
+        (voorziening['attractie_max_gewicht'] is None or bezoeker['gewicht'] <= voorziening['attractie_max_gewicht'])
+    )
 
-for voorziening in list_met_voorzieningen:
-
-    # Controleer of het type van de attractie overeenkomt met de voorkeuren van de klant
-
-    # Let op: .capitalize() zorgt ervoor dat de vergelijking ongevoelig is voor hoofdletters/kleine letters
-
-    if voorziening['type'].capitalize() in json_dict['voorkeuren_attractietypes']:
-
-        # Print de naam en het type van de geselecteerde attractie voor testdoeleinden (debugging)
-
-        print(f"{voorziening['naam']} - {voorziening['type']}")
-
-        # Voeg de attractie toe aan de lijst van geselecteerde attracties
-
-        attractie_lijst.append(voorziening)
-
- 
-
-# Genereer het dagprogramma voor de bezoeker
-
-# Dit programma bevat de naam van de bezoeker en een lijst van geselecteerde attracties op basis van zijn/haar voorkeuren
-
-dagprogramma = {
-    "voorkeuren": {
-        "naam": json_dict["naam"],  # Naam van de bezoeker uit JSON  
-        "gender": json_dict["gender"],  
-        "leeftijd": json_dict["leeftijd"],
-        "lengte": json_dict["lengte"],
-        "gewicht": json_dict["gewicht"],
-        "verblijfsduur": json_dict["verblijfsduur"],
-        "voorkeuren_attractietypes": json_dict["voorkeuren_attractietypes"],
-        "lievelings_attracties": json_dict["lievelings_attracties"],
-        "rekening_houden_met_weer": json_dict["rekening_houden_met_weer"],
-    },
-    "voorzieningen": attractie_lijst  # Voeg de geselecteerde attracties en horeca toe aan het programma
+# Voorbeeld van enkele voorzieningen
+voorziening_1 = {
+    'naam': 'Voorziening 1',
+    'attractie_min_leeftijd': 17,
+    'attractie_min_lengte': 140,
+    'attractie_max_lengte': 200,
+    'attractie_max_gewicht': 130
 }
 
-# uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
-with open('persoonlijk_programma_bezoeker_x.json', 'w') as json_bestand:
-    json.dump(dagprogramma, json_bestand)
+voorziening_2 = {
+    'naam': 'Voorziening 2',
+    'attractie_min_leeftijd': 12,
+    'attractie_min_lengte': 120,
+    'attractie_max_lengte': 180,
+    'attractie_max_gewicht': None  
+}
+
+bezoeker = {
+    'leeftijd': json_dict['leeftijd'],
+    'lengte': json_dict['lengte'],
+    'gewicht': json_dict['gewicht']
+}
+
+# Test de toegankelijkheid voor beide voorzieningen
+toegang_voorziening_1 = toegankelijkheid_voorziening(voorziening_1, bezoeker)
+toegang_voorziening_2 = toegankelijkheid_voorziening(voorziening_2, bezoeker)
+
+print(f"Toegang tot {voorziening_1['naam']}: {toegang_voorziening_1}")
+print(f"Toegang tot {voorziening_1['naam']}: {toegang_voorziening_2}")
+
+ 
+
+# # Doorloop de lijst van voorzieningen (attracties) en voeg attracties toe die aan de voorkeuren van de klant voldoen
+
+# for voorziening in list_met_voorzieningen:
+
+#     # Controleer of het type van de attractie overeenkomt met de voorkeuren van de klant
+
+#     # Let op: .capitalize() zorgt ervoor dat de vergelijking ongevoelig is voor hoofdletters/kleine letters
+
+#     if voorziening['type'].capitalize() in json_dict['voorkeuren_attractietypes']:
+
+#         # Print de naam en het type van de geselecteerde attractie voor testdoeleinden (debugging)
+
+#         print(f"{voorziening['naam']} - {voorziening['type']}")
+
+#         # Voeg de attractie toe aan de lijst van geselecteerde attracties
+
+#         dagplanning.append(voorziening)
+
+ 
+
+# # Genereer het dagprogramma voor de bezoeker
+
+# # Dit programma bevat de naam van de bezoeker en een lijst van geselecteerde attracties op basis van zijn/haar voorkeuren
+
+# dagprogramma = {
+#     "voorkeuren": {
+#         "naam": json_dict["naam"],  # Naam van de bezoeker uit JSON  
+#         "gender": json_dict["gender"],  # Geslacht van de bezoeker uit JSON  
+#         "leeftijd": json_dict["leeftijd"], # Leeftijd van de bezoeker uit JSON  
+#         "lengte": json_dict["lengte"], # Lengte van de bezoeker uit JSON  
+#         "gewicht": json_dict["gewicht"], # Gewicht van de bezoeker uit JSON  
+#         "verblijfsduur": json_dict["verblijfsduur"], # Verblijfsduur van de bezoeker uit JSON  
+#         "voorkeuren_attractietypes": json_dict["voorkeuren_attractietypes"], # Voorkeuren attractietypes van de bezoeker uit JSON  
+#         "lievelings_attracties": json_dict["lievelings_attracties"], # Lieveling attracties van de bezoeker uit JSON  
+#         "rekening_houden_met_weer": json_dict["rekening_houden_met_weer"], # Rekening houden met het weer (ja/nee) uit JSON  
+#     },
+#     "voorzieningen": dagplanning  # Voeg de geselecteerde attracties en horeca toe aan het programma
+# }
+
+# # uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
+# with open('persoonlijk_programma_bezoeker_x.json', 'w') as json_bestand:
+#     json.dump(dagprogramma, json_bestand)
 
