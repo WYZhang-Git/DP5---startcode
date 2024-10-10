@@ -7,7 +7,12 @@ def overzicht_attracties():
     # altijd verbinding openen om query's uit te voeren
     db.connect()
 
-    select_query = "SELECT naam, type FROM voorziening"
+    select_query = """
+    SELECT id, naam, type, attractie_min_lengte, attractie_max_lengte, attractie_min_leeftijd,
+           attractie_max_gewicht, overdekt, geschatte_wachttijd, doorlooptijd, actief, productaanbod
+    FROM voorziening
+    WHERE type IN ('Achtbaan', 'Water', 'Draaien', 'Familie', 'Simulator', 'Horeca', 'Winkel');  
+    """
     results = db.execute_query(select_query)
 
     # altijd verbinding sluiten met de database als je klaar bent
@@ -34,9 +39,8 @@ print(json_dict["naam"])
 list_met_voorzieningen = overzicht_attracties()
 print(list_met_voorzieningen)
 
-print("Eerste rij:")
-print(list_met_voorzieningen[0]["naam"])
-print(list_met_voorzieningen[0]["type"])
+print("\n")
+print(f"Dagprogramma van: {json_dict['naam']} \n")
 
 json_bestand.close() # sluit het bestand indien niet meer nodig
 
@@ -156,5 +160,5 @@ dagprogramma = {
 
 # uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
 with open('persoonlijk_programma_bezoeker_x.json', 'w') as json_bestand:
-    json.dump(dagprogramma, json_bestand)
+    json.dump(dagprogramma, json_bestand, indent=4)
 
