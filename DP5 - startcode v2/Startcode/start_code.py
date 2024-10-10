@@ -59,7 +59,7 @@ verblijfsduur = json_dict['verblijfsduur'] # Verblijfsduur van de bezoeker (in m
 horeca_moment_interval = 120  # Om de 2 uur wordt een horecagelegenheid toegevoegd 
 laatste_horeca_moment = 0  # Houdt bij wanneer de laatste horecagelegenheid was toegevoegd
 
-# Functie om te checken of een bezoeker aan de eisden voldoet van een voorziening
+# Functie om te checken of een bezoeker aan de eisen voldoet van een voorziening
 def toegankelijkheid_voorziening(voorziening, bezoeker):
     return (
         (voorziening['attractie_min_leeftijd'] is None or bezoeker['leeftijd'] >= voorziening['attractie_min_leeftijd']) and
@@ -92,31 +92,31 @@ def voeg_horecagelegenheid_toe(dagplanning, totale_tijd, laatste_horeca_moment):
     
 # Doorloop de lijst van voorzieningen en voeg attracties toe die aan de voorkeuren van de bezoeker voldoen
 for voorziening in list_met_voorzieningen:
+    # Voeg een souvenirwinkel toe als er 45 minuten of minder over zijn
     if verblijfsduur - totale_tijd <= 45:
-        # Voeg een souvenirwinkel toe als er 45 minuten of minder over zijn
         for voorziening in list_met_voorzieningen:
             if voorziening['type'] == 'winkel':
                 dagplanning.append(voorziening)
                 print(f"Souvenirwinkel toegevoegd: {voorziening['naam']}")
-                totale_tijd += bereken_totale_geschatte_tijd(voorziening)  # Voeg de tijd voor de winkel toe aan de totale tijd
-                break  # Voeg alleen maar één souvenirwinkel toe aan de dagplanning
+                totale_tijd += bereken_totale_geschatte_tijd(voorziening)
+                break  # Voeg alleen maar één souvenirwinkel toe
         break  # Stop de loop om geen attracties of horecagelegenheden meer toe te voegen
 
-    # Voorkeursattracties toevoegen als er genoeg tijd is
+    # Controleer of het tijd is om een horecagelegenheid toe te voegen
+    if totale_tijd - laatste_horeca_moment >= horeca_moment_interval:
+        totale_tijd, laatste_horeca_moment = voeg_horecagelegenheid_toe(dagplanning, totale_tijd, laatste_horeca_moment)
+    
+    # Voeg voorkeursattracties toe als er genoeg tijd is
     if voorziening['type'].capitalize() in json_dict['voorkeuren_attractietypes'] and toegankelijkheid_voorziening(voorziening, json_dict):
         totale_geschatte_tijd_attractie = bereken_totale_geschatte_tijd(voorziening)
 
         # Controleer of er genoeg tijd is
         if totale_tijd + totale_geschatte_tijd_attractie <= verblijfsduur:  
-            dagplanning.append(voorziening)  # Voeg attractie toe aan de dagplanning
-            totale_tijd += totale_geschatte_tijd_attractie  # Tel de tijd op
-            print(f"Toegevoegd: {voorziening['naam']}, totale tijd: {totale_tijd} minuten")  # Voor overzicht bij het testen
+            dagplanning.append(voorziening)
+            totale_tijd += totale_geschatte_tijd_attractie
+            print(f"Toegevoegd: {voorziening['naam']}, totale tijd: {totale_tijd} minuten")
         else:
             print(f"Niet genoeg tijd voor: {voorziening['naam']}")
-
-    # Controleer of het tijd is om een horecagelegenheid toe te voegen
-    if totale_tijd - laatste_horeca_moment >= horeca_moment_interval:
-        totale_tijd, laatste_horeca_moment = voeg_horecagelegenheid_toe(dagplanning, totale_tijd, laatste_horeca_moment)
 
 # Voeg een horecagelegenheid toe als de bezoeker langer dan 4 uur verblijft
 if verblijfsduur > 240 and totale_tijd - laatste_horeca_moment >= horeca_moment_interval:
