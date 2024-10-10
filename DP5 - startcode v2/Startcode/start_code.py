@@ -45,12 +45,46 @@ json_bestand.close() # sluit het bestand indien niet meer nodig
 # Zorg dat het persoonlijke programma genereert/output naar een .json bestand, dat weer ingelezen kan worden in een webomgeving (zie acceptatieomgeving website folder)
 # Hieronder een begin...
 
-# dit moet worden gevuld door een algoritme
+# Initialiseer een lege lijst die de geselecteerde attracties zal bevatten
+
+attractie_lijst = []
+
+ 
+
+# Doorloop de lijst van voorzieningen (attracties) en voeg attracties toe die aan de voorkeuren van de klant voldoen
+
+for voorziening in list_met_voorzieningen:
+
+    # Controleer of het type van de attractie overeenkomt met de voorkeuren van de klant
+
+    # Let op: .capitalize() zorgt ervoor dat de vergelijking ongevoelig is voor hoofdletters/kleine letters
+
+    if voorziening['type'].capitalize() in json_dict['voorkeuren_attractietypes']:
+
+        # Print de naam en het type van de geselecteerde attractie voor testdoeleinden (debugging)
+
+        print(f"{voorziening['naam']} - {voorziening['type']}")
+
+        # Voeg de attractie toe aan de lijst van geselecteerde attracties
+
+        attractie_lijst.append(voorziening)
+
+ 
+
+# Genereer het dagprogramma voor de bezoeker
+
+# Dit programma bevat de naam van de bezoeker en een lijst van geselecteerde attracties op basis van zijn/haar voorkeuren
+
 dagprogramma = {
+
     "voorkeuren": {
-        "naam": "Bezoeker de Jong"
-        # ... etc ... etc ...
+
+        "naam": "Bezoeker de Jong",  # Vervang dit met de daadwerkelijke naam van de bezoeker
+
+        "voorzieningen": attractie_lijst  # Voeg de geselecteerde attracties toe aan het programma
+
     }
+
 }
 
 # uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
