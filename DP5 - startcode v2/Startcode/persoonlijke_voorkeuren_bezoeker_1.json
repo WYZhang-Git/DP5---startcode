@@ -8,10 +8,10 @@
     "gender": "M",
     "leeftijd": 18,
     "lengte": 185,
-    "gewicht": 129,
-    "verblijfsduur": 300,
+    "gewicht": 70,
+    "verblijfsduur": 500,
     "voorkeuren_attractietypes": ["Achtbaan", "Simulator", "Water"],
-    "voorkeuren_eten": ["Patat", "Snoep", "IJs"],
+    "voorkeuren_eten": ["Patat"],
     "lievelings_attracties": ["Mountain Climb"],
     "rekening_houden_met_weer": false
 }
