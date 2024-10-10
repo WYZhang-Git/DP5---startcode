@@ -50,11 +50,11 @@ json_bestand.close() # sluit het bestand indien niet meer nodig
 # Zorg dat het persoonlijke programma genereert/output naar een .json bestand, dat weer ingelezen kan worden in een webomgeving (zie acceptatieomgeving website folder)
 # Hieronder een begin...
 
-# Initialiseer een lege lijst die de dagprogramma zal bevatten
+# Initialiseer een lege lijst die het dagprogramma zal bevatten
 
 dagprogramma = []
 
-# Variabelen om de totale tijd van de dagprogramma bij te houden
+# Variabelen om de totale tijd van het dagprogramma bij te houden
 totale_tijd = 0
 verblijfsduur = json_dict['verblijfsduur']  # Verblijfsduur van de bezoeker (in minuten)
 horeca_moment_interval = 120  # Om de 2 uur wordt een horecagelegenheid toegevoegd 
@@ -76,7 +76,7 @@ def voorkeur_eten_check(horeca):
     voorkeuren = json_dict['voorkeuren_eten']
     return horeca['productaanbod'].capitalize() in voorkeuren
 
-# Functie om te controleren of een voorziening al in de dagprogramma staat
+# Functie om te controleren of een voorziening al in het dagprogramma staat
 def dagprogramma_controle(dagprogramma, voorziening, max_aantal = 1):
     aantal = sum(1 for item in dagprogramma if item['naam'] == voorziening['naam'])
     
