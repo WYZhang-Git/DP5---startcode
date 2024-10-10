@@ -10,7 +10,7 @@
     "lengte": 180,
     "gewicht": 140,
     "verblijfsduur": 120,
-    "voorkeuren_attractietypes": ["Familie", "Draaien"],
+    "voorkeuren_attractietypes": ["Familie"],
     "voorkeuren_eten": ["Pasta", "Patat", "IJs"],
     "lievelings_attracties": ["Family Carousel"],
     "rekening_houden_met_weer": false
