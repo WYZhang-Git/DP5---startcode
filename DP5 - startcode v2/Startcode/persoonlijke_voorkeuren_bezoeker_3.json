@@ -11,7 +11,7 @@
     "gewicht": 70,
     "verblijfsduur": 180,
     "voorkeuren_attractietypes": ["Water"],
-    "voorkeuren_eten": ["Patat"],
+    "voorkeuren_eten": [],
     "lievelings_attracties": ["Waterfall Adventure"],
     "rekening_houden_met_weer": true
 }
