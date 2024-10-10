@@ -66,36 +66,19 @@ def toegankelijkheid_voorziening(voorziening, bezoeker):
         (voorziening['attractie_max_lengte'] is None or bezoeker['lengte'] <= voorziening['attractie_max_lengte']) and  
         (voorziening['attractie_max_gewicht'] is None or bezoeker['gewicht'] <= voorziening['attractie_max_gewicht'])
     )
-
-# Voorbeeld van enkele voorzieningen
-voorziening_1 = {
-    'naam': 'Voorziening 1',
-    'attractie_min_leeftijd': 17,
-    'attractie_min_lengte': 140,
-    'attractie_max_lengte': 200,
-    'attractie_max_gewicht': 130
-}
-
-voorziening_2 = {
-    'naam': 'Voorziening 2',
-    'attractie_min_leeftijd': 12,
-    'attractie_min_lengte': 120,
-    'attractie_max_lengte': 180,
-    'attractie_max_gewicht': None  
-}
-
-bezoeker = {
-    'leeftijd': json_dict['leeftijd'],
-    'lengte': json_dict['lengte'],
-    'gewicht': json_dict['gewicht']
-}
-
-# Test de toegankelijkheid voor beide voorzieningen
-toegang_voorziening_1 = toegankelijkheid_voorziening(voorziening_1, bezoeker)
-toegang_voorziening_2 = toegankelijkheid_voorziening(voorziening_2, bezoeker)
-
-print(f"Toegang tot {voorziening_1['naam']}: {toegang_voorziening_1}")
-print(f"Toegang tot {voorziening_1['naam']}: {toegang_voorziening_2}")
+    
+# Doorloop de lijst van voorzieningen en voeg attracties toe die aan de voorkeuren van de bezoeker voldoen
+for voorziening in list_met_voorzieningen:
+    if voorziening['type'].capitalize() in json_dict['voorkeuren_attractietypes'] and toegankelijkheid_voorziening(voorziening, json_dict):
+        totale_geschatte_tijd = voorziening['geschatte_wachttijd'] + voorziening['doorlooptijd']
+        
+        # Controleer of er genoeg tijd is
+        if totale_tijd + totale_geschatte_tijd <= verblijfsduur:
+            dagplanning.append(voorziening)  # Voeg attractie toe aan de lijst
+            totale_tijd += totale_geschatte_tijd  # Tel de tijd op
+            print(f"Toegevoegd: {voorziening['naam']}, Totale tijd: {totale_tijd} minuten") # Voor overzicht bij het testen
+        else:
+            print(f"Niet genoeg tijd voor: {voorziening['naam']}")
 
  
 
@@ -123,22 +106,22 @@ print(f"Toegang tot {voorziening_1['naam']}: {toegang_voorziening_2}")
 
 # # Dit programma bevat de naam van de bezoeker en een lijst van geselecteerde attracties op basis van zijn/haar voorkeuren
 
-# dagprogramma = {
-#     "voorkeuren": {
-#         "naam": json_dict["naam"],  # Naam van de bezoeker uit JSON  
-#         "gender": json_dict["gender"],  # Geslacht van de bezoeker uit JSON  
-#         "leeftijd": json_dict["leeftijd"], # Leeftijd van de bezoeker uit JSON  
-#         "lengte": json_dict["lengte"], # Lengte van de bezoeker uit JSON  
-#         "gewicht": json_dict["gewicht"], # Gewicht van de bezoeker uit JSON  
-#         "verblijfsduur": json_dict["verblijfsduur"], # Verblijfsduur van de bezoeker uit JSON  
-#         "voorkeuren_attractietypes": json_dict["voorkeuren_attractietypes"], # Voorkeuren attractietypes van de bezoeker uit JSON  
-#         "lievelings_attracties": json_dict["lievelings_attracties"], # Lieveling attracties van de bezoeker uit JSON  
-#         "rekening_houden_met_weer": json_dict["rekening_houden_met_weer"], # Rekening houden met het weer (ja/nee) uit JSON  
-#     },
-#     "voorzieningen": dagplanning  # Voeg de geselecteerde attracties en horeca toe aan het programma
-# }
+dagprogramma = {
+    "voorkeuren": {
+        "naam": json_dict["naam"],  # Naam van de bezoeker uit JSON  
+        "gender": json_dict["gender"],  # Geslacht van de bezoeker uit JSON  
+        "leeftijd": json_dict["leeftijd"], # Leeftijd van de bezoeker uit JSON  
+        "lengte": json_dict["lengte"], # Lengte van de bezoeker uit JSON  
+        "gewicht": json_dict["gewicht"], # Gewicht van de bezoeker uit JSON  
+        "verblijfsduur": json_dict["verblijfsduur"], # Verblijfsduur van de bezoeker uit JSON  
+        "voorkeuren_attractietypes": json_dict["voorkeuren_attractietypes"], # Voorkeuren attractietypes van de bezoeker uit JSON  
+        "lievelings_attracties": json_dict["lievelings_attracties"], # Lieveling attracties van de bezoeker uit JSON  
+        "rekening_houden_met_weer": json_dict["rekening_houden_met_weer"], # Rekening houden met het weer (ja/nee) uit JSON  
+    },
+    "voorzieningen": dagplanning  # Voeg de geselecteerde attracties en horeca toe aan het programma
+}
 
-# # uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
-# with open('persoonlijk_programma_bezoeker_x.json', 'w') as json_bestand:
-#     json.dump(dagprogramma, json_bestand)
+# uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
+with open('persoonlijk_programma_bezoeker_x.json', 'w') as json_bestand:
+    json.dump(dagprogramma, json_bestand, indent=4)
 
