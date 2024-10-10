@@ -81,15 +81,18 @@ for voorziening in list_met_voorzieningen:
 # Dit programma bevat de naam van de bezoeker en een lijst van geselecteerde attracties op basis van zijn/haar voorkeuren
 
 dagprogramma = {
-
     "voorkeuren": {
-
-        "naam": "Bezoeker de Jong",  # Vervang dit met de daadwerkelijke naam van de bezoeker
-
-        "voorzieningen": attractie_lijst  # Voeg de geselecteerde attracties toe aan het programma
-
-    }
-
+        "naam": json_dict["naam"],  # Naam van de bezoeker uit JSON  
+        "gender": json_dict["gender"],  
+        "leeftijd": json_dict["leeftijd"],
+        "lengte": json_dict["lengte"],
+        "gewicht": json_dict["gewicht"],
+        "verblijfsduur": json_dict["verblijfsduur"],
+        "voorkeuren_attractietypes": json_dict["voorkeuren_attractietypes"],
+        "lievelings_attracties": json_dict["lievelings_attracties"],
+        "rekening_houden_met_weer": json_dict["rekening_houden_met_weer"],
+    },
+    "voorzieningen": attractie_lijst  # Voeg de geselecteerde attracties en horeca toe aan het programma
 }
 
 # uiteindelijk schrijven we de dictionary weg naar een JSON-bestand
