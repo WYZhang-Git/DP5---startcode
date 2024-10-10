@@ -71,19 +71,24 @@ def toegankelijkheid_voorziening(voorziening, bezoeker):
 def bereken_totale_geschatte_tijd(voorziening):
     return voorziening['geschatte_wachttijd'] + voorziening['doorlooptijd']
 
+def voorkeur_eten_check(voorziening):
+    voorkeuren = json_dict['voorkeuren_eten']
+    
+    return voorziening['productaanbod'].capitalize() in voorkeuren
 
 # Functie om horecagelegenheid toe te voegen
-def voeg_horecagelegenheid_toe(dagplanning, totale_tijd, laatste_horeca_tijd):
+def voeg_horecagelegenheid_toe(dagplanning, totale_tijd, laatste_horeca_moment):
     for voorziening in list_met_voorzieningen:
         if voorziening['type'] == 'horeca':
-            totale_geschatte_tijd_horeca = bereken_totale_geschatte_tijd(voorziening)
-            if totale_tijd + totale_geschatte_tijd_horeca <= verblijfsduur:
-                dagplanning.append(voorziening)
-                totale_tijd += totale_geschatte_tijd_horeca
-                laatste_horeca_tijd = totale_tijd
-                print(f"Horecagelegenheid toegevoegd: {voorziening['naam']}, totale tijd: {totale_tijd} minuten") # Voor overzicht bij het testen
-                break  # Voeg alleen maar één horecagelegenheid toe aan de dagplanning
-    return totale_tijd, laatste_horeca_tijd
+            if voorkeur_eten_check(voorziening) or not json_dict['voorkeuren_eten']:
+                totale_geschatte_tijd_horeca = bereken_totale_geschatte_tijd(voorziening)
+                if totale_tijd + totale_geschatte_tijd_horeca <= verblijfsduur:
+                    dagplanning.append(voorziening)
+                    totale_tijd += totale_geschatte_tijd_horeca
+                    laatste_horeca_moment = totale_tijd
+                    print(f"Horecagelegenheid toegevoegd: {voorziening['naam']}, totale tijd: {totale_tijd} minuten")  # Voor overzicht bij het testen
+                    break  # Voeg alleen maar één horecagelegenheid toe aan de dagplanning
+    return totale_tijd, laatste_horeca_moment
     
 # Doorloop de lijst van voorzieningen en voeg attracties toe die aan de voorkeuren van de bezoeker voldoen
 for voorziening in list_met_voorzieningen:       
