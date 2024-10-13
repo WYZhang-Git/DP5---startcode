@@ -118,8 +118,8 @@ for lievelings_attractie in list_met_voorzieningen:
 
 # Doorloop de lijst van voorzieningen en voeg horecagelegenheden en souvenirwinkel toe
 for voorziening in list_met_voorzieningen:
-    # Voeg een souvenirwinkel toe als er 45 minuten of minder over zijn
-    if verblijfsduur - totale_tijd <= 45 and voorziening['type'] == 'winkel': 
+    # Voeg een souvenirwinkel toe als er 30 minuten of minder over zijn
+    if verblijfsduur - totale_tijd <= 30 and voorziening['type'] == 'winkel': 
         totale_geschatte_tijd_winkel = bereken_totale_geschatte_tijd(voorziening)
         totale_tijd += totale_geschatte_tijd_winkel
         dagprogramma.append(voorziening)
